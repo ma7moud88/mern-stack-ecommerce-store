@@ -1,5 +1,5 @@
-import { Request, Response } from "express";
-import { UserModel } from "../../Models/UserModel";
+import type { Request, Response } from "express";
+import { UserModel } from "../../Models/UserModel.ts";
 import asynchandler from "express-async-handler";
 import slugify from "slugify";
 
@@ -7,7 +7,7 @@ const CreateRegister = asynchandler(async (req: Request, res: Response) => {
   const { name, email, phone, password } = req.body;
 
   const findUser = await UserModel.findOne({ email });
-  if (!findUser) {
+  if (findUser) {
     res.status(302).json({ msg: "Emial is already exists" });
     return;
   }
@@ -23,3 +23,5 @@ const CreateRegister = asynchandler(async (req: Request, res: Response) => {
     User,
   });
 });
+
+export default CreateRegister;

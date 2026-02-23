@@ -20,6 +20,10 @@ const UserSchema = new mongoose.Schema(
       require: true,
       minlength: 5,
     },
+    passwordcomfirm: {
+      type: String,
+      require: true,
+    },
     phone: {
       type: String,
     },

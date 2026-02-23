@@ -1,11 +1,15 @@
 import mongoose from "mongoose";
 
-export const ConnectDB = () => {
-  const URLDB = process.env.DB_URL;
-  if (!URLDB) {
-    throw new Error("DB_URL undefined");
+export const ConnectDB = async () => {
+  try {
+    const URL_DB = process.env.DB_URL;
+    if (!URL_DB) {
+      throw new Error("DB_URL undefined");
+    }
+    const conn = await mongoose.connect(URL_DB);
+    console.log(`Database Connected:${conn.connection.host}`);
+  } catch (err: any) {
+    console.error("Database connection failed:", err.message);
+    process.exit(1);
   }
-  mongoose.connect(URLDB).then((conn) => {
-    console.log(`Database Connected ${conn.connection.host}`);
-  });
 };
