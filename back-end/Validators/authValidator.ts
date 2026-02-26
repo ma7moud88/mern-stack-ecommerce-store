@@ -1,6 +1,6 @@
 import { check } from "express-validator";
-import { ValidationMiddleWare } from "../../MiddleWare/ValidatorMiddleWare.ts";
-import { UserModel } from "../../Models/UserModel.ts";
+import { ValidationMiddleWare } from "../MiddleWare/ValidatorMiddleWare.ts";
+import { UserModel } from "../Models/UserModel.ts";
 
 export const registerValidator = [
   check("name")
@@ -33,7 +33,17 @@ export const registerValidator = [
   check("passwordcomfirm")
     .notEmpty()
     .withMessage("Password confirmation required"),
-  check("phone").notEmpty(),
+  check("phone").notEmpty().withMessage("phone required"),
 
+  ValidationMiddleWare,
+];
+
+export const loginValidator = [
+  check("email")
+    .notEmpty()
+    .withMessage("Email is required!")
+    .isEmail()
+    .withMessage("Invalid email address!"),
+  check("password").notEmpty().withMessage("password is required!"),
   ValidationMiddleWare,
 ];
