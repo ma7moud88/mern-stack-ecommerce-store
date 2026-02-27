@@ -9,3 +9,9 @@ export const Login = asynchandler(async (req: Request, res: Response) => {
     ...result,
   });
 });
+
+
+export const  ProtectHandler=asynchandler(async(req:Request,res:Response)=>{
+  // check if token exist if exist get
+  
+})

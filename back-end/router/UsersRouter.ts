@@ -1,6 +1,7 @@
 import express from "express";
 import { Register } from "../controller/Auth/register.ts";
-import { Login } from "../controller/Auth/login.ts";
+import { Login ,ProtectHandler} from "../controller/Auth/login.ts";
+
 import {
   registerValidator,
   loginValidator,

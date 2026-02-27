@@ -1,6 +1,5 @@
 import { UserModel } from "../Models/UserModel.ts";
 import slugify from "slugify";
-import type { NextFunction } from "express";
 import { generateToken } from "../utils/GenerateToken.ts";
 import APIERROR from "../utils/apiError.ts";
 import bcrypt from "bcrypt";
@@ -10,14 +9,14 @@ interface UserInput {
   email: string;
   phone: string;
   password: string;
-  passwordcomfirm: string;
+  passwordconfirm: string;
 }
 
 export const registerUser = async ({
   name,
   email,
   password,
-  passwordcomfirm,
+  passwordconfirm,
   phone,
 }: UserInput) => {
   const userfound = await UserModel.findOne({ email });
@@ -29,6 +28,7 @@ export const registerUser = async ({
     email,
     phone,
     password,
+    passwordconfirm,
     slug: slugify(name),
   });
   const token = generateToken(User._id.toString());
@@ -46,3 +46,5 @@ export const loginUser = async ({ email, password }: UserInput) => {
   const token = generateToken(user._id.toString());
   return { token, user };
 };
+
+export const ProtectUser = async () => {};

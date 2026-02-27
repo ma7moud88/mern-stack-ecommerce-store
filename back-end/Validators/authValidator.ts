@@ -23,14 +23,14 @@ export const registerValidator = [
     .notEmpty()
     .withMessage("password is required!")
     .isLength({ min: 6 })
-    .withMessage("password must be at least 6 characters")
-    .custom((password, { req }) => {
-      if (password !== req.body.passwordcomfirm) {
-        throw new Error("Password Comfirmation incorrect");
-      }
-      return true;
-    }),
-  check("passwordcomfirm")
+    .withMessage("password must be at least 6 characters"),
+  // .custom((password, { req }) => {
+  //   if (password !== req.body.passwordconfirm) {
+  //     throw new Error("Password Confirmation incorrect");
+  //   }
+  //   return true;
+  // }),
+  check("passwordconfirm")
     .notEmpty()
     .withMessage("Password confirmation required"),
   check("phone").notEmpty().withMessage("phone required"),

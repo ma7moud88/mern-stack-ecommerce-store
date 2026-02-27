@@ -1,12 +1,21 @@
 import express from "express";
+import cors from "cors";
 import "dotenv/config";
 import Users from "./router/UsersRouter.ts";
 import { ConnectDB } from "./config/database.ts";
 import { globalError } from "./MiddleWare/errorMiddleWare.ts";
 const app = express();
-app.use(express.json());
+
 
 ConnectDB();
+
+
+app.use(cors({
+  origin: "*",
+  credentials: true // لو هتبعت كوكيز
+}));
+
+app.use(express.json());
 
 // Router
 app.get("/", (req, res) => {
