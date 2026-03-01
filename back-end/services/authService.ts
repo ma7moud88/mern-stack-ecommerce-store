@@ -10,6 +10,7 @@ interface UserInput {
   phone: string;
   password: string;
   passwordconfirm: string;
+  role:string;
 }
 
 export const registerUser = async ({
@@ -18,6 +19,7 @@ export const registerUser = async ({
   password,
   passwordconfirm,
   phone,
+  role,
 }: UserInput) => {
   const userfound = await UserModel.findOne({ email });
   if (userfound) {
@@ -30,6 +32,7 @@ export const registerUser = async ({
     password,
     passwordconfirm,
     slug: slugify(name),
+    role: role||"user",
   });
   const token = generateToken(User._id.toString());
   return {

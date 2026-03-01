@@ -1,6 +1,13 @@
 import { useState } from "react";
+type RegisterProps = {
+  onRegister: (registeredUser: {
+    name: string;
+    email: string;
+    phone: string;
+  }) => void;
+};
 
-export default function Register() {
+export default function Register({ onRegister }: RegisterProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -47,6 +54,11 @@ export default function Register() {
         }
         return;
       }
+      onRegister({
+        name: data.name || name,
+        email: data.email || email,
+        phone: data.phone || phone,
+      });
     } catch (err) {
       console.error("Error connecting to backend:", err);
     }

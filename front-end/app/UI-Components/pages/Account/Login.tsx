@@ -1,24 +1,36 @@
 import { useState } from "react";
-
-export default function Login() {
+type LoginProps = {
+  onLogin: (loggedInUser: {
+    name: string;
+    email: string;
+    role: "admin" | "user";
+  }) => void;
+};
+export default function Login({ onLogin }: LoginProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   type LoginBody = {
     email: string;
     password: string;
   };
-  const handleLogin = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
     try {
-      console.log("Sending login data:", { email, password });
       const ress = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
       const data = await ress.json();
-      console.log("res===>", data);
+
+      onLogin({
+        name: data.name, 
+        email: data.email,
+        role: data.role,
+      });
     } catch (err) {
-      console.error("Error connecting to backend:", err);
+      console.error(err);
     }
   };
   return (
@@ -26,13 +38,7 @@ export default function Login() {
       <h2 className="Unbounded text-xl mb-10 text-center lg:text-left">
         Login
       </h2>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleLogin();
-        }}
-        className="flex flex-col"
-      >
+      <form onSubmit={handleSubmit} className="flex flex-col">
         <div className="flex flex-col mb-5">
           <label className="Unbounded mb-2">Username or email address *</label>
           <input

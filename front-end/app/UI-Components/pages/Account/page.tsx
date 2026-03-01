@@ -1,66 +1,74 @@
 "use client";
-import Link from "next/link";
+
+import { useEffect, useState } from "react";
 import Login from "./Login";
+import AdminPage from "./Admin/AdminPage";
+import UserPage from "./User/UserPage";
 import Register from "./Register";
-import { useState } from "react";
 
-export default function page() {
-  const [type] = useState<String>("Login");
-  return (
-    <>
-      <div className="px-[8%] lg:px-[12%] bg-[#E6F9EF] py-5">
-        <div className="flex justify-between items-center">
-          <div className="flex">
-            <Link href="/" className="text-2xl Unbounded">
-              {" "}
-              Home &nbsp; :
-            </Link>
-            <h2 className="Unbounded text-2xl text-[var(--prim-color)]">
-              &nbsp;Account
-            </h2>
-          </div>
+export default function Page() {
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [authType, setAuthType] = useState<"Login" | "Register">("Login");
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) setUser(JSON.parse(storedUser));
+    setLoading(false);
+  }, []);
+
+  const handleLogin = (loggedInUser: any) => {
+    localStorage.setItem("user", JSON.stringify(loggedInUser));
+    setUser(loggedInUser);
+  };
+  const handleRegister = (registeredUser: any) => {
+    localStorage.setItem("user", JSON.stringify(registeredUser));
+    setUser(registeredUser);
+  };
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    setUser(null);
+  };
+
+  if (loading) return <div>Loading...</div>;
+
+  if (!user) {
+    return (
+      <div className="flex flex-col items-center my-20 mx-2">
+        {authType === "Login" ? (
+          <Login onLogin={handleLogin} />
+        ) : (
+          <Register onRegister={handleRegister} />
+        )}
+        <div className="mt-5">
+          {authType === "Login" ? (
+            <p>
+              Don't have an account?{" "}
+              <button
+                onClick={() => setAuthType("Register")}
+                className="text-[var(--prim-color)] font-semibold underline"
+              >
+                Register
+              </button>
+            </p>
+          ) : (
+            <p>
+              Already have an account?{" "}
+              <button
+                onClick={() => setAuthType("Login")}
+                className="text-[var(--prim-color)] font-semibold underline"
+              >
+                Login
+              </button>
+            </p>
+          )}
         </div>
       </div>
-
-      <div className="px-[8%] lg:px-[12%] py-10">
-        <div className="flex flex-col lg:flex-row justify-center">
-          {type === "Login" && <Login />}
-          {type === "Register" && <Register />}
-        </div>
-      </div>
-
-      <div className="px-[8%] lg:px-[12%] py-5">
-        <div className="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-2 gap-5">
-          <div className="flex justify-center items-center gap-3 px-3 py-5 rounded-lg bg-[var(--prim-light)]">
-            <i className="bi bi-truck text-2xl rounded-full bg-[var(--prim-color)] px-3 py-2 text-white"></i>
-            <div className="flex flex-col">
-              <h2 className="font-semibold Unbounded">Free Shipping</h2>
-              <p className="text-gray-700">Free shipping all over the US</p>
-            </div>
-          </div>
-          <div className="flex justify-center items-center gap-3 px-3 py-5 rounded-lg bg-[var(--prim-light)]">
-            <i className="bi bi-heart-pulse text-2xl rounded-full bg-[var(--prim-color)] px-3 py-2 text-white"></i>
-            <div className="flex flex-col">
-              <h2 className="font-semibold Unbounded">100% Satisfaction</h2>
-              <p className="text-gray-700">Free shipping all over the US</p>
-            </div>
-          </div>
-          <div className="flex justify-center items-center gap-3 px-3 py-5 rounded-lg bg-[var(--prim-light)]">
-            <i className="bi bi-credit-card-2-front text-2xl rounded-full bg-[var(--prim-color)] px-3 py-2 text-white"></i>
-            <div className="flex flex-col">
-              <h2 className="font-semibold Unbounded">Secure Payments</h2>
-              <p className="text-gray-700">Free shipping all over the US</p>
-            </div>
-          </div>
-          <div className="flex justify-center items-center gap-3 px-3 py-5 rounded-lg bg-[var(--prim-light)]">
-            <i className="bi bi-chat-square-text text-2xl rounded-full bg-[var(--prim-color)] px-3 py-2 text-white"></i>
-            <div className="flex flex-col">
-              <h2 className="font-semibold Unbounded">24/7 Support </h2>
-              <p className="text-gray-700">Free shipping all over the US</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
+    );
+  }
+  return user.role?.toLowerCase() === "admin" ? (
+    <AdminPage user={user} onLogout={handleLogout} />
+  ) : (
+    <UserPage user={user} onLogout={handleLogout} />
   );
 }

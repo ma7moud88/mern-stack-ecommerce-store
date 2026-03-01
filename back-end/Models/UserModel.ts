@@ -9,6 +9,7 @@ export interface IUser extends Document {
   slug: string;
   passwordconfirm: string;
   phone: string;
+  role: string;
 }
 
 const UserSchema = new mongoose.Schema<IUser>(
@@ -33,6 +34,12 @@ const UserSchema = new mongoose.Schema<IUser>(
     },
     phone: {
       type: String,
+    },
+    role: {
+      type:String,
+      enum: ["admin", "user"],
+      required:true,
+      default:"user",
     },
   },
   { timestamps: true },
